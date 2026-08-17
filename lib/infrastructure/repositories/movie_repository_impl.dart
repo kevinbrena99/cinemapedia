@@ -14,5 +14,20 @@ class MovieRepositoryImpl extends MoviesRepository {
     return datasource.getNowPlaying(page: page);
   }
 
+  @override
+  Future<List<MovieEntity>> getPopulars({int page = 1}) {
+    return datasource.getPopulars(page: page);
+  }
+
+  @override
+  Future<List<MovieEntity>> getTopsReated({int page = 1}) {
+    return datasource.getTopsReated();
+  }
+
+  @override
+  Future<List<MovieEntity>> getUpComming({int page = 1}) {
+    return datasource.getUpComing();
+  }
+
 
 }
