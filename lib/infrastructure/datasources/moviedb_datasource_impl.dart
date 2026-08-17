@@ -14,11 +14,26 @@ class MoviedbDatasourceImpl extends MoviesDBDatasource{
       'accept': 'application/json'
     },
     )
+  )
+  ..interceptors.add(
+    LogInterceptor(
+    request: true,
+    requestHeader: true,
+    requestBody: true,
+    responseHeader: true,
+    responseBody: true,
+    error: true,
+  ),
   );
+  
+
 
   @override
   Future<List<MovieEntity>> getNowPlaying({int page = 1}) async {
-    final response = await dio.get("/movie/now_playing");
+    final response = await dio.get("/movie/now_playing",
+    queryParameters: {
+      "page": page
+    });
 
     final moviesResponse = MovieDataResponse.fromJson(response.data);
     final List<MovieEntity> movies = moviesResponse.results
