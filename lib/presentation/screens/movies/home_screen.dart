@@ -1,3 +1,4 @@
+import 'package:cinemapedia/presentation/providers/movies/initial_loading_provider.dart';
 import 'package:cinemapedia/presentation/providers/movies/movies_providers.dart';
 import 'package:cinemapedia/presentation/providers/movies/movies_slideshow_provider.dart';
 import 'package:cinemapedia/presentation/widgets/widgets.dart';
@@ -38,66 +39,78 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final initialLoading = ref.watch(initialLoadingProvider);
+
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final popularMovies = ref.watch(popularMoviesProvider);
     final topsReatedMovies = ref.watch(topsReatedMoviesProvider);
     final upComingMovies = ref.watch(upComingMoviesProvider);
     final slideShowMovies = ref.watch(moviesSlideShowProvider);
 
-    return CustomScrollView(
-      slivers: [
-        const SliverAppBar(
-          floating: true,
-          flexibleSpace: FlexibleSpaceBar(
-            title: CustomAppbar(),
-            titlePadding: EdgeInsets.zero,
-            centerTitle: false,
-          ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            return Column(
-              children: [
-                MoviesSlideShow(movies: slideShowMovies),
+    return initialLoading
+        ? FullScreenLoader()
+        : CustomScrollView(
+            slivers: [
+              const SliverAppBar(
+                floating: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: CustomAppbar(),
+                  titlePadding: EdgeInsets.zero,
+                  centerTitle: false,
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return Column(
+                    children: [
+                      MoviesSlideShow(movies: slideShowMovies),
 
-                MovieHorizontalListview(
-                  movies: nowPlayingMovies,
-                  title: "En cines",
-                  subTitle: "Lunes 20",
-                  loadNextPage: () {
-                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
+                      MovieHorizontalListview(
+                        movies: nowPlayingMovies,
+                        title: "En cines",
+                        subTitle: "Lunes 20",
+                        loadNextPage: () {
+                          ref
+                              .read(nowPlayingMoviesProvider.notifier)
+                              .loadNextPage();
+                        },
+                      ),
 
-                MovieHorizontalListview(
-                  movies: upComingMovies,
-                  title: "Proximamente",
-                  subTitle: "En este mes",
-                  loadNextPage: () {
-                    ref.read(upComingMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
+                      MovieHorizontalListview(
+                        movies: upComingMovies,
+                        title: "Proximamente",
+                        subTitle: "En este mes",
+                        loadNextPage: () {
+                          ref
+                              .read(upComingMoviesProvider.notifier)
+                              .loadNextPage();
+                        },
+                      ),
 
-                MovieHorizontalListview(
-                  movies: popularMovies,
-                  title: "Populares",
-                  loadNextPage: () {
-                    ref.read(popularMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
-                 MovieHorizontalListview(
-                  movies: topsReatedMovies,
-                  title: "Mejores Calificadas",
-                  subTitle: "Desde siempre",
-                  loadNextPage: () {
-                    ref.read(topsReatedMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
-              ],
-            );
-          }, childCount: 1),
-        ),
-      ],
-    );
+                      MovieHorizontalListview(
+                        movies: popularMovies,
+                        title: "Populares",
+                        loadNextPage: () {
+                          ref
+                              .read(popularMoviesProvider.notifier)
+                              .loadNextPage();
+                        },
+                      ),
+                      MovieHorizontalListview(
+                        movies: topsReatedMovies,
+                        title: "Mejores Calificadas",
+                        subTitle: "Desde siempre",
+                        loadNextPage: () {
+                          ref
+                              .read(topsReatedMoviesProvider.notifier)
+                              .loadNextPage();
+                        },
+                      ),
+                    ],
+                  );
+                }, childCount: 1),
+              ),
+            ],
+          );
   }
 }
