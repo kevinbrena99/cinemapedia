@@ -10,4 +10,6 @@ abstract class MoviesRepository {
 
   Future<List<MovieEntity>> getUpComming({ int page = 1 });
 
+   Future<MovieEntity> getMovieById( String id );
+
 }
