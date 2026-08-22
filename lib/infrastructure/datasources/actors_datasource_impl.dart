@@ -28,7 +28,9 @@ class ActorsDatasourceImpl extends ActorsDatasource{
 
   @override
   Future<List<ActorEntity>> getActorsByMovie(String movieId) async{
-    final response = await dio.get("/movie/$movieId/credits");
+    final response = await dio.get("/movie/$movieId/credits", queryParameters: {
+      "language": "es-MX"
+    });
     final credits = CreditsResponse.fromJson(response.data);
     final List<ActorEntity> actors = credits.cast.map((cast) => ActorMapper.castToEntity(cast)).toList();
     return actors;

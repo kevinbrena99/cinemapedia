@@ -1,32 +1,57 @@
+import 'package:cinemapedia/domain/entiites/movie_entity.dart';
+import 'package:cinemapedia/presentation/delegates/search_movie_delegate.dart';
+import 'package:cinemapedia/presentation/providers/movies/movies_repository_provider.dart';
+import 'package:cinemapedia/presentation/providers/search/search_movie_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class CustomAppbar extends StatelessWidget {
+class CustomAppbar extends ConsumerWidget {
   const CustomAppbar({super.key});
 
   @override
-  Widget build(BuildContext context) {
-
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
     final textLarge = Theme.of(context).textTheme.titleMedium;
 
     return SafeArea(
-      child: Padding(padding: const EdgeInsetsGeometry.symmetric(horizontal: 10),
-      child: SizedBox(
-        width: double.infinity,
-        child: Row(
-          children: [
-            Icon(Icons.movie_outlined, color: colors.primary),
-            const SizedBox( width: 5),
-            Text("Cinemapedia", style: textLarge),
+      child: Padding(
+        padding: const EdgeInsetsGeometry.symmetric(horizontal: 10),
+        child: SizedBox(
+          width: double.infinity,
+          child: Row(
+            children: [
+              Icon(Icons.movie_outlined, color: colors.primary),
+              const SizedBox(width: 5),
+              Text("Cinemapedia", style: textLarge),
 
-            const Spacer(),
-            IconButton(onPressed: (){
-              
-            }, 
-            icon: Icon(Icons.search))
-          ],
+              const Spacer(),
+              IconButton(
+                onPressed: () {
+
+                  final searchedMovies = ref.read(searchedMoviesProvider);
+                  final query = ref.watch(searchQueryProvider);
+
+                  showSearch<MovieEntity?>(
+                    query: query,
+                    context: context,
+                    delegate: SearchMovieDelegate(
+                      initialMovies: searchedMovies,
+                      searchMoviesCallback: ref.read(searchedMoviesProvider.notifier).searchMoviesByQuery ,
+                    ),
+                  ).then((movie) {
+                    if (movie == null) return;
+                    if (context.mounted) {
+                      context.push('/movie/${movie.id}');
+                    }
+                  });
+                },
+                icon: Icon(Icons.search),
+              ),
+            ],
+          ),
         ),
-      ))
-      );
+      ),
+    );
   }
 }

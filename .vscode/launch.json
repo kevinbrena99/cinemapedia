@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "flutter (Mi Note 10 Lite)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "adb-c682d6b8-cRA1eq._adb-tls-connect._tcp",
+            "toolArgs": ["--no-enable-impeller"]
+        },
+        {
+            "name": "flutter (emulador)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "emulator-5554",
+            "toolArgs": ["--no-enable-impeller"]
+        }
+    ]
+}
